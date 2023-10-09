@@ -42,17 +42,12 @@
         var nav = document.createElement("nav");
         insert = root.querySelectorAll("section")[1];
         insert.insertAdjacentHTML("beforeBegin", toc);
-        // insert.insertAdjacentHTML("beforeBegin", escape_html(toc));
 
         // Output
-        var output = document.getElementById("output");
-        output.innerHTML = escape_html(root.innerHTML).replace(/&amp;(amp;)+/g, "&amp;amp;");
-
+        document.getElementById("output").textContent = root.innerHTML;
         // Preview  result
-        var value = document.getElementById("output").value;
-        var view  = document.getElementById("view");
-        console.log(value);
-        view.innerHTML = value;
+        document.getElementById("view").innerHTML = root.innerHTML;
+        navigator.clipboard.writeText(root.innerHTML);
       }
 
       function create_toc(children){
@@ -85,20 +80,13 @@
         return toc;
       }
 
-// http://qiita.com/saekis/items/c2b41cd8940923863791
-function escape_html (string) {
-  if(typeof string !== 'string') {
-    return string;
+function escape_html(unsafeText) {
+  if(typeof unsafeText !== 'string') {
+    return unsafeText;
   }
-  return string.replace(/[&'"<>]/g, function(match) {
-    return {
-      '&': '&amp;',
-      "'": '&apos;',
-      '"': '&quot;',
-      '<': '&lt;',
-      '>': '&gt;',
-    }[match]
-  });
+  let escaped = document.createElement('div');
+  escaped.textContent = unsafeText;
+  return escaped.innerHTML;
 }
       ]]>
     </script>
@@ -658,7 +646,7 @@ figure>dl>dd:nth-of-type(n+2) {
         <form>
           <fieldset> <legend>Input HTML</legend> <textarea id="input"
 placeholder="Input here" style="width: 100%; height: 10em;"></textarea> <button
-              type="button" onclick="GenerateTOC();">Convert</button> </fieldset>
+              type="button" onclick="GenerateTOC();">Go+Copy</button> </fieldset>
         </form>
         <form>
           <fieldset> <legend>Output HTML</legend> <textarea id="output"
@@ -675,8 +663,8 @@ placeholder="Output here" style="width: 100%; height: 10em;"></textarea> </field
           <p> </p>
           <ol>
             <li>［Input HTML］に目次を生成したいHTMLコードを記入する。</li>
-            <li>［Convert］を押下する。</li>
-            <li>［Output HTML］に目次とリンクの作成のために見出し要素（<code>h1-h6</code>）の<code>id</code>属性が記入されたHTMLコードが出力される。また，［Result View］に見出し追加後のHTMLコードの描画結果を表示する。</li>
+            <li>［Go+Copy］を押下する。</li>
+            <li>［Output HTML］に目次とリンクの作成のために見出し要素（<code>h1-h6</code>）の<code>id</code>属性が記入されたHTMLコードが出力されてクリップボードにコピーされる。また、［Result View］に見出し追加後のHTMLコードの描画結果を表示する。</li>
           </ol>
         </section>
         <section>
@@ -711,7 +699,7 @@ placeholder="Output here" style="width: 100%; height: 10em;"></textarea> </field
 </figure><p></p><p>見出しへのリンクを作るために，<code>section&gt;h1-h6</code>要素の<code>id</code>属性に，実行日時（<code>YYYYMMDDThhmm</code>形式）とテキストの空白をハイフン<code>-</code>に置換した値を<strong>上書き</strong>で設定する。</p>
                           <p>Example: <code>&lt;h1&gt;Heading 1&lt;/h1&gt;</code> -&gt; <code>&lt;h1 id="20170506T04:30_Heading-1"&gt;Heading 1&lt;/h1&gt;</code></p>
                           <p>その際に，以下の文字はエスケープ処理が難しいので<code>id</code>属性からは削除する。</p>
-                          <pre><code>~^`'"(){}\\|!&amp;&lt;&gt;</code></pre><p>目次の見出しは最初の目次対象の見出しと同じ<code>h1-h6</code>要素を使い，テキストは<code>Table of Contents</code>となる。</p><p>［Convert］ボタンを押下して何も反応がないときは，HTMLをうまく処理できていない可能性が高い。例えば，ルートの<code>section</code>要素の終了タグを記入し忘れるなど，［Input HTML］に記入したHTMLがXHTMLとして適切かどうか確認したほうがいい。</p><pre><code></code></pre></section></section><section>
+                          <pre><code>~^`'"(){}\\|!&amp;&lt;&gt;</code></pre><p>目次の見出しは最初の目次対象の見出しと同じ<code>h1-h6</code>要素を使い，テキストは<code>Table of Contents</code>となる。</p><p>［Go+Copy］ボタンを押下して何も反応がないときは，HTMLをうまく処理できていない可能性が高い。例えば，ルートの<code>section</code>要素の終了タグを記入し忘れるなど，［Input HTML］に記入したHTMLがXHTMLとして適切かどうか確認したほうがいい。</p><pre><code></code></pre></section></section><section>
                         <h1 id="Sample-Input/Output">Sample Input/Output</h1>
                         <p> </p>
                         <ul>
